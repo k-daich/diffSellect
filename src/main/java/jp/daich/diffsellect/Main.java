@@ -16,7 +16,7 @@ public class Main {
         }
 
         static boolean isValidArgs(String[] args) {
-            if (args == null || args.length != 2) {
+            if (args == null || args.length != 2 || args[0] == null | args[1] == null) {
                 return false;
             }
             return true;

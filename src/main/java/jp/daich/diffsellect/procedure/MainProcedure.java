@@ -8,7 +8,7 @@ import jp.daich.diffsellect.common.poi.ExcelWriter;
 public class MainProcedure {
 
     public void execute(String tableName, String sellectResult) {
-        ExcelWriter eWriter = new ExcelWriter("TSentence");
-        eWriter.flush();
+        ExcelWriter eWriter = new ExcelWriter(tableName);
+        eWriter.flush(sellectResult);
     }
 }
