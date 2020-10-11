@@ -1,5 +1,6 @@
 package jp.daich.diffsellect.common.poi.procedure;
 
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
@@ -7,17 +8,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.poi.ss.usermodel.Cell;
+
+import jp.daich.diffsellect.common.poi.entity.OpeCell;
+import jp.daich.diffsellect.common.poi.util.OperationCellsUtil;
 import jp.daich.diffsellect.common.util.StringUtils;
 
 public class WriteOneResultProcedure {
 
-    // X座標
-    private int xPosition = 0;
-    // Y座標
-    private int yPosition = 0;
-
     // SXSSF(xlsx)
-    final SXSSFSheet sheet;
+    final Sheet sheet;
+    // Operatable Cell
+    OpeCell opeCell;
 
     public WriteOneResultProcedure(SXSSFWorkbook book, String tableName) {
 
@@ -29,7 +30,8 @@ public class WriteOneResultProcedure {
             // get existed sheet
             sheet = book.getSheet(tableName);
         }
-
+        // OpeCellをA1位置で初期化
+        this.opeCell = new OpeCell(sheet, 0, 0);
     }
 
     // シート新規作成フラグ（一旦falseで、後続で新規作成した場合のみtrueにする）
@@ -37,37 +39,18 @@ public class WriteOneResultProcedure {
 
     public void execute(String sellectResult) {
         initProcedure();
-        // mainProcedure(sellectResult);
+        mainProcedure(sellectResult);
     }
 
     private void initProcedure() {
         // A1セルを取得する
-        Cell cell = scanEmptyCellForRight(xPosition, yPosition);
-        cell.setCellValue(new SimpleDateFormat("yyyy/MM/dd(E) HH:mm:ss").format(new Date()));
+        this.opeCell = OperationCellsUtil.scanEmptyCellForRight(opeCell);
+        this.opeCell.setCellValue(new SimpleDateFormat("yyyy/MM/dd(E) HH:mm:ss").format(new Date()));
     }
 
     private void mainProcedure(String sellectResult) {
-        for(String dbKomkVal : sellectResult.split("\t")) {
-            setNextYCellValue(dbKomkVal);
-        }
-    }
-
-    private Cell getCell(int x, int y) {
-        return sheet.createRow(x).createCell(y);
-    }
-
-    private void setNextYCellValue(String value) {
-        getCell(xPosition, ++yPosition).setCellValue(value);
-    }
-
-    private Cell scanEmptyCellForRight(int startX, int y) {
-        Cell cell = null;
-        // startXを始点に空セルを走査する
-        for (int x = startX;; x++) {
-            cell = getCell(x, y);
-            // 空セルだったらセルオブジェクトを返す
-            if (StringUtils.isEmpty(cell.getStringCellValue()))
-                return cell;
+        for (String dbKomkVal : sellectResult.split("\t")) {
+            this.opeCell.nextY().setCellValue(dbKomkVal);
         }
     }
 }

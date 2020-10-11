@@ -49,6 +49,7 @@ public class ExcelWriter {
    */
   public void writeSellectResult(String tableName, String sellectResult) {
     new WriteOneResultProcedure(book, tableName).execute(sellectResult);
+    new WriteOneResultProcedure(book, tableName).execute(sellectResult);
   }
 
   /**
