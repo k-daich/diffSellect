@@ -30,8 +30,23 @@ public class OpeCell {
         return this.cell.getStringCellValue();
     }
 
+    public String getStringNextCellValue(int xMargin, int yMargin) {
+        Cell marginedCell = this.getCell(this.getX() + xMargin, this.getY() + yMargin);
+        return marginedCell.getStringCellValue();
+    }
+
     public void setCellValue(String value) {
         this.cell.setCellValue(value);
+    }
+
+    public String getXAsAtoZ() {
+        int n = this.getX() + 1;
+        StringBuilder buf = new StringBuilder();
+        while (n != 0) {
+            buf.append((char) ((n - 1) % 26 + 'A'));
+            n = (n - 1) / 26;
+        }
+        return buf.reverse().toString();
     }
 
     public int getX() {

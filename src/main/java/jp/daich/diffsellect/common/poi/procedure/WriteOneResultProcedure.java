@@ -11,6 +11,7 @@ import org.apache.poi.ss.usermodel.Cell;
 
 import jp.daich.diffsellect.common.poi.entity.OpeCell;
 import jp.daich.diffsellect.common.poi.util.OperationCellsUtil;
+import jp.daich.diffsellect.common.util.LogUtil;
 import jp.daich.diffsellect.common.util.StringUtils;
 
 public class WriteOneResultProcedure {
@@ -34,22 +35,24 @@ public class WriteOneResultProcedure {
         this.opeCell = new OpeCell(sheet, 0, 0);
     }
 
-    // シート新規作成フラグ（一旦falseで、後続で新規作成した場合のみtrueにする）
-    private boolean isNewSheet;
-
     public void execute(String sellectResult) {
+        LogUtil.debug(this.getClass(), "★★★start★★★");
         initProcedure();
         mainProcedure(sellectResult);
+        LogUtil.debug(this.getClass(), "☆☆☆end☆☆☆");
     }
 
     private void initProcedure() {
         // A1セルを取得する
         this.opeCell = OperationCellsUtil.scanEmptyCellForRight(opeCell);
-        this.opeCell.setCellValue(new SimpleDateFormat("yyyy/MM/dd(E) HH:mm:ss").format(new Date()));
+        this.opeCell.setCellValue(new SimpleDateFormat("yyyy/MM/dd(E) HH:mm:ssSSS").format(new Date()));
     }
 
     private void mainProcedure(String sellectResult) {
         for (String dbKomkVal : sellectResult.split("\t")) {
+            if (this.opeCell.getX() > 0) {
+                OperationCellsUtil.setSheetConditionalFormat(opeCell, this.sheet);
+            }
             this.opeCell.nextY().setCellValue(dbKomkVal);
         }
     }

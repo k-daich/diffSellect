@@ -1,10 +1,6 @@
 package jp.daich.diffsellect.common.poi;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 import jp.daich.diffsellect.common.poi.procedure.WriteOneResultProcedure;
@@ -18,14 +14,6 @@ public class ExcelWriter {
 
   // SXSSF(xlsx)
   private final SXSSFWorkbook book = new SXSSFWorkbook();
-
-  private Row row;
-
-  private int rowNumber = 0;
-
-  private Cell cell;
-
-  private int colNumber = 0;
 
   /**
    * Constructor
@@ -48,6 +36,8 @@ public class ExcelWriter {
    * Sellect結果をエクセルに書き込む
    */
   public void writeSellectResult(String tableName, String sellectResult) {
+    new WriteOneResultProcedure(book, tableName).execute(sellectResult);
+    new WriteOneResultProcedure(book, tableName).execute(sellectResult);
     new WriteOneResultProcedure(book, tableName).execute(sellectResult);
     new WriteOneResultProcedure(book, tableName).execute(sellectResult);
   }
