@@ -39,14 +39,22 @@ public class OpeCell {
         this.cell.setCellValue(value);
     }
 
-    public String getXAsAtoZ() {
-        int n = this.getX() + 1;
+    public String getXAsAtoZ(int xPosition) {
+        int n = xPosition + 1;
         StringBuilder buf = new StringBuilder();
         while (n != 0) {
             buf.append((char) ((n - 1) % 26 + 'A'));
             n = (n - 1) / 26;
         }
         return buf.reverse().toString();
+    }
+
+    public String getCellAddressStr() {
+        return this.getXAsAtoZ(this.getX()) + (this.getY() + 1);
+    }
+
+    public String getCellAddressStr(int xPosition, int yPosition) {
+        return this.getXAsAtoZ(xPosition) + (yPosition + 1);
     }
 
     public int getX() {

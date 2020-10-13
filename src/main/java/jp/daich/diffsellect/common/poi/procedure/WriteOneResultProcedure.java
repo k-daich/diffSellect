@@ -1,18 +1,14 @@
 package jp.daich.diffsellect.common.poi.procedure;
 
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.xssf.streaming.SXSSFSheet;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.apache.poi.ss.usermodel.Cell;
-
 import jp.daich.diffsellect.common.poi.entity.OpeCell;
 import jp.daich.diffsellect.common.poi.util.OperationCellsUtil;
 import jp.daich.diffsellect.common.util.LogUtil;
-import jp.daich.diffsellect.common.util.StringUtils;
 
 public class WriteOneResultProcedure {
 
@@ -21,7 +17,7 @@ public class WriteOneResultProcedure {
     // Operatable Cell
     OpeCell opeCell;
 
-    public WriteOneResultProcedure(SXSSFWorkbook book, String tableName) {
+    public WriteOneResultProcedure(XSSFWorkbook book, String tableName) {
 
         // 指定したテーブル名のシートがない場合は新規作成する
         if (book.getSheet(tableName) == null) {
@@ -50,10 +46,15 @@ public class WriteOneResultProcedure {
 
     private void mainProcedure(String sellectResult) {
         for (String dbKomkVal : sellectResult.split("\t")) {
-            if (this.opeCell.getX() > 0) {
-                OperationCellsUtil.setSheetConditionalFormat(opeCell, this.sheet);
-            }
+            // 現在位置から1つ下に移動し、DB項目値を設定する
             this.opeCell.nextY().setCellValue(dbKomkVal);
+            // 初回（一番左列）以外の時は、条件付き書式（前回DB項目値との比較確認）を設定する
+            if (this.opeCell.getX() > 0) {
+                OperationCellsUtil.setSheetConditionalFormat(
+                        this.opeCell.getCellAddressStr(this.opeCell.getX() - 1, this.opeCell.getY()) + " = "
+                                + this.opeCell.getCellAddressStr(this.opeCell.getX(), this.opeCell.getY()),
+                        this.opeCell.getCellAddressStr(this.opeCell.getX(), this.opeCell.getY()), this.sheet);
+            }
         }
     }
 }

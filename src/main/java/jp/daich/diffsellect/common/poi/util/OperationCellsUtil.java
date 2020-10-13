@@ -34,18 +34,27 @@ public class OperationCellsUtil {
         }
     }
 
-    public static void setSheetConditionalFormat(OpeCell opeCell, Sheet sheet) {
-        SheetConditionalFormatting sheetCF = sheet.getSheetConditionalFormatting();
+    /**
+     * 条件付き書式を設定する
+     * 
+     * @param conditionStr 条件文字列（例： $B$2=$C$2)
+     * @param applyRange   適用範囲（例： $B$2:$C$2)
+     * @param sheet
+     */
+    public static void setSheetConditionalFormat(String conditionStr, String applyRange, Sheet sheet) {
+        LogUtil.debug(OperationCellsUtil.class, "conditionStr : " + conditionStr + ", applyRange : " + applyRange);
+        SheetConditionalFormatting conditionFormat = sheet.getSheetConditionalFormatting();
 
         // Condition 1: Cell Value is equal to green (Green Fill)
-        ConditionalFormattingRule rule1 = sheetCF.createConditionalFormattingRule(" = " + opeCell.getStringNextCellValue(-1, 0));
+        ConditionalFormattingRule rule1 = conditionFormat.createConditionalFormattingRule(conditionStr);
+        // ConditionalFormattingRule rule1 =
+        // conditionFormat.createConditionalFormattingRule(ComparisonOperator.EQUAL,
+        // opeCell.getStringNextCellValue(-1, 0));
         PatternFormatting fill1 = rule1.createPatternFormatting();
         fill1.setFillBackgroundColor(IndexedColors.GREEN.index);
         fill1.setFillPattern(PatternFormatting.SOLID_FOREGROUND);
-        LogUtil.debug(OperationCellsUtil.class,
-                "opeCell.getXAsAtoZ() + (opeCell.getY() + 1) : " + opeCell.getXAsAtoZ() + (opeCell.getY() + 1));
 
-        CellRangeAddress[] regions = { CellRangeAddress.valueOf("A1:B5") };
-        sheetCF.addConditionalFormatting(regions, rule1);
+        CellRangeAddress[] regions = { CellRangeAddress.valueOf(applyRange) };
+        conditionFormat.addConditionalFormatting(regions, rule1);
     }
 }

@@ -1,7 +1,7 @@
 package jp.daich.diffsellect.common.poi;
 
 import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import jp.daich.diffsellect.common.poi.procedure.WriteOneResultProcedure;
 
@@ -13,7 +13,7 @@ import java.util.Date;
 public class ExcelWriter {
 
   // SXSSF(xlsx)
-  private final SXSSFWorkbook book = new SXSSFWorkbook();
+  private final XSSFWorkbook book = new XSSFWorkbook();
 
   /**
    * Constructor
