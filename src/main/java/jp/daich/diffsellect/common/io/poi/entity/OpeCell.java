@@ -97,6 +97,10 @@ public class OpeCell {
         return y;
     }
 
+    public Cell getCell() {
+        return this.cell;
+    }
+
     private Cell getCell(int x, int y) {
         return getCell(getRow(y), x);
     }

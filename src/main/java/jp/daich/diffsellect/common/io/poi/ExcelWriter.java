@@ -21,12 +21,6 @@ public class ExcelWriter {
    * @param tableName
    */
   public ExcelWriter(String tableName) {
-    System.out.println("!!! Start ExcelWriter.java !!!");
-
-    Font font = book.createFont();
-    font.setFontName("Meiryo UI");
-    font.setFontHeightInPoints((short) 9);
-    System.out.println("!!! End ExcelWriter.java !!!");
   }
 
   public static final String XLSX_FILE_PATH = ".\\outfile"
