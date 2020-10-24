@@ -1,4 +1,4 @@
-package jp.daich.diffsellect.common.poi.entity;
+package jp.daich.diffsellect.common.io.poi.entity;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;

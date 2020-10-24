@@ -1,4 +1,4 @@
-package jp.daich.diffsellect.common.poi.procedure;
+package jp.daich.diffsellect.procedure.sub;
 
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -6,14 +6,13 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import jp.daich.diffsellect.common.poi.entity.OpeCell;
-import jp.daich.diffsellect.common.poi.util.OperationCellsUtil;
+import jp.daich.diffsellect.common.io.poi.entity.OpeCell;
+import jp.daich.diffsellect.common.io.poi.util.OperationCellsUtil;
 import jp.daich.diffsellect.common.util.LogUtil;
 
 public class WriteOneResultProcedure {
@@ -45,10 +44,10 @@ public class WriteOneResultProcedure {
     }
 
     public void execute(String sellectResult) {
-        LogUtil.debug(this.getClass(), "★★★start★★★");
+        LogUtil.startLog(sellectResult);;
         initProcedure();
         mainProcedure(sellectResult);
-        LogUtil.debug(this.getClass(), "☆☆☆end☆☆☆");
+        LogUtil.endLog();
     }
 
     private void initProcedure() {
@@ -58,6 +57,7 @@ public class WriteOneResultProcedure {
     }
 
     private void mainProcedure(String sellectResult) {
+        LogUtil.startLog(sellectResult);
         // フォント設定オブジェクトの生成
         Font font = this.book.createFont();
         font.setFontName("Meiryo UI");
@@ -82,5 +82,6 @@ public class WriteOneResultProcedure {
                         IndexedColors.LEMON_CHIFFON, this.sheet);
             }
         }
+        LogUtil.endLog();
     }
 }

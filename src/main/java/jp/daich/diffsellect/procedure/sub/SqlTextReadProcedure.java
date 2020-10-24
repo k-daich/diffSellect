@@ -25,6 +25,12 @@ public class SqlTextReadProcedure {
     // 現在読み込んでいるSQLテキストの行種類
     private SQL_TXT_LINE_TYPE currentLineType = SQL_TXT_LINE_TYPE.OTHER;
 
+    // 読み込みファイルの最終行に到達したフラグ
+    private boolean isEndLine = false;
+
+    // 読み込み中の文字列
+    private String lineStr;
+
     /**
      * Constructor
      */
@@ -41,7 +47,28 @@ public class SqlTextReadProcedure {
     }
 
     /**
-     * 1行分の文字列を返す 最終行まで到達していた場合はnullを返す
+     * 次の行を読み込み、trueを返す。<br>
+     * 最終行に到達済みだった場合はfalseを返す。
+     * 
+     * @return 次行の読み込み対象が存在したか
+     */
+    public boolean fetchNext() throws IOException {
+        this.lineStr = reader.readLine();
+        return this.lineStr != null;
+    }
+
+    /**
+     * 読み込んだ行の文字列を返す
+     * 
+     * @return 読み込んだ行の文字列
+     */
+    public String getLineStr() {
+        return this.lineStr;
+    }
+
+    /**
+     * 1行分の文字列を返す<br>
+     * 最終行まで到達していた場合はnullを返す
      * 
      * @return lineString
      */

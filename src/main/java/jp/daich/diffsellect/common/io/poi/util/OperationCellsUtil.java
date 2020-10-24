@@ -1,4 +1,4 @@
-package jp.daich.diffsellect.common.poi.util;
+package jp.daich.diffsellect.common.io.poi.util;
 
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -10,7 +10,7 @@ import org.apache.poi.ss.usermodel.SheetConditionalFormatting;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 
-import jp.daich.diffsellect.common.poi.entity.OpeCell;
+import jp.daich.diffsellect.common.io.poi.entity.OpeCell;
 import jp.daich.diffsellect.common.util.LogUtil;
 import jp.daich.diffsellect.common.util.StringUtils;
 
@@ -45,7 +45,7 @@ public class OperationCellsUtil {
      * @param sheet
      */
     public static void setSheetConditionalFormat(String conditionStr, String applyRange, IndexedColors color ,Sheet sheet) {
-        LogUtil.debug(OperationCellsUtil.class, "conditionStr : " + conditionStr + ", applyRange : " + applyRange);
+        LogUtil.debug("conditionStr : " + conditionStr + ", applyRange : " + applyRange);
         SheetConditionalFormatting conditionFormat = sheet.getSheetConditionalFormatting();
 
         ConditionalFormattingRule rule1 = conditionFormat.createConditionalFormattingRule(conditionStr);

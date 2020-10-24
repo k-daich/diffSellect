@@ -1,14 +1,13 @@
-package jp.daich.diffsellect.common.poi;
-
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import jp.daich.diffsellect.common.poi.procedure.WriteOneResultProcedure;
+package jp.daich.diffsellect.common.io.poi;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import jp.daich.diffsellect.procedure.sub.WriteOneResultProcedure;
 
 public class ExcelWriter {
 
@@ -20,7 +19,7 @@ public class ExcelWriter {
    * 
    * @param tableName
    */
-  public ExcelWriter(String tableName) {
+  public ExcelWriter() {
   }
 
   public static final String XLSX_FILE_PATH = ".\\outfile"
@@ -30,9 +29,6 @@ public class ExcelWriter {
    * Sellect結果をエクセルに書き込む
    */
   public void writeSellectResult(String tableName, String sellectResult) {
-    new WriteOneResultProcedure(book, tableName).execute(sellectResult);
-    new WriteOneResultProcedure(book, tableName).execute(sellectResult);
-    new WriteOneResultProcedure(book, tableName).execute(sellectResult);
     new WriteOneResultProcedure(book, tableName).execute(sellectResult);
   }
 
