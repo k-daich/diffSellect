@@ -4,5 +4,5 @@
 
 mvn clean package
 
-java -jar target/diffSellect-1.0-jar-with-dependencies.jar T_Sentence "aaa	bbb	ccc	ddd"
+java -jar target/diffSellect-1.0-jar-with-dependencies.jar test/sql.txt
 

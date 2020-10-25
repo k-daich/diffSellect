@@ -10,6 +10,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import jp.daich.diffsellect.common.io.poi.entity.OpeCell;
 import jp.daich.diffsellect.common.io.poi.util.OperationCellsUtil;
@@ -24,16 +26,21 @@ public class WriteOneResultProcedure {
     // Operatable Cell
     OpeCell opeCell;
 
+    static final Map<Integer, Sheet> sheetMap = new HashMap<Integer, Sheet>();
+
     public WriteOneResultProcedure(XSSFWorkbook book, String tableName) {
         // bookオブジェクトを設定する
         this.book = book;
+        LogUtil.debug("[table name] : " + tableName + " ,[hash code] : " + tableName.hashCode());
         // 指定したテーブル名のシートがない場合は新規作成する
-        if (book.getSheet(tableName) == null) {
+        if (sheetMap.get(tableName.hashCode()) == null) {
             // create sheet
             sheet = book.createSheet(tableName);
+            sheetMap.put(tableName.hashCode(), sheet);
         } else {
             // get existed sheet
-            sheet = book.getSheet(tableName);
+            sheet = sheetMap.get(tableName.hashCode());
+            // sheet = book.getSheet(tableName);
         }
         // シートの行の高さのデフォルト設定を行う
         sheet.setDefaultRowHeightInPoints((short) 12);

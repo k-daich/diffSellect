@@ -1,6 +1,8 @@
 package jp.daich.diffsellect;
 
 import jp.daich.diffsellect.common.exception.DiffSellectException;
+import jp.daich.diffsellect.common.util.ArrayUtils;
+import jp.daich.diffsellect.common.util.StringUtils;
 import jp.daich.diffsellect.procedure.MainProcedure;
 
 public class Main {
@@ -8,28 +10,23 @@ public class Main {
     static class Arguments {
 
         Arguments(String[] args) {
-            if (!isValidArgs(args)) {
-                throw new DiffSellectException("Invalid Args : " + args);
-            }
-            arg0_tableName = args[0];
-            arg1_sellectResult = args[1];
+            assertValidArgs(args);
+            arg_sqlFilePath = args[0];
         }
 
-        static boolean isValidArgs(String[] args) {
-            if (args == null || args.length != 2 || args[0] == null | args[1] == null) {
-                return false;
+        static void assertValidArgs(String[] args) {
+            if (args == null || args.length != 1 || StringUtils.isEmpty(args[0])) {
+                throw new DiffSellectException("Invalid Args : " + ArrayUtils.toString(args));
             }
-            return true;
         }
 
-        private static String arg0_tableName;
-        private static String arg1_sellectResult;
+        private static String arg_sqlFilePath;
     }
 
     public static void main(String[] args) {
         System.out.println("!!! Start Main.java !!!");
         Arguments arguments = new Arguments(args);
-        new MainProcedure().execute(arguments.arg0_tableName, arguments.arg1_sellectResult);
+        new MainProcedure().execute(arguments.arg_sqlFilePath);
         System.out.println("!!! End Main.java !!!");
     }
 }
