@@ -15,12 +15,12 @@
    		%nは改行
       -->
         <Property name="logfile">./logs/debugLog.log</Property>
-        <Property name="logfile-archive">./logs/debugLog_%d{yyyy-MM-dd}-%i.log</Property>
+        <Property name="logfile-archive">./logs/debugLog_%d{yyyy-MM-dd}.log</Property>
     </Properties>
     
 	<Appenders>
 		<!-- コンソールに出力する設定 -->
-		<Console name="Console" target="SYSTEM_OUT">
+		<Console name="logfile001" target="SYSTEM_OUT">
 			<PatternLayout>
 				<pattern>${format1}</pattern>
 			</PatternLayout>
@@ -33,8 +33,8 @@
 				<pattern>${format1}</pattern>
 			</PatternLayout>
 			<Policies>
-				//　1kBに達したらローテーションのファイルを作成する
-				<SizeBasedTriggeringPolicy size="1KB"/>
+				//　1MBに達したらローテーションのファイルを作成する
+				<SizeBasedTriggeringPolicy size="1MB"/>
 			</Policies>
 			//　ローテーションのファイルは、3つ持つ
 			<DefaultRolloverStrategy max="3"/>

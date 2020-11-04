@@ -65,6 +65,10 @@ public class OpeCell {
         return this.cell.getRowIndex();
     }
 
+    public void setXY(int xPosition, int yPosition) {
+        getCell(xPosition, yPosition);
+    }
+
     public void setX(int xPosition) {
         getCell(xPosition, this.cell.getRowIndex());
     }

@@ -1,8 +1,7 @@
-package jp.daich.diffsellect.common.io.poi;
+package jp.daich.diffsellect.common.poi;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -10,6 +9,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import jp.daich.diffsellect.common.util.StringUtils;
 import jp.daich.diffsellect.procedure.sub.WriteOneResultProcedure;
+import jp.daich.diffsellect.procedure.sub.WriteQueryProcedure;
 
 public class ExcelWriter {
 
@@ -24,16 +24,13 @@ public class ExcelWriter {
   public ExcelWriter() {
   }
 
-  public static final String XLSX_FILE_PATH = ".\\outfile"
-      + new SimpleDateFormat("yyyy_MM_dd(E)HH_mm_ss").format(new Date()) + ".xlsx";
-
   /**
    * Sellectのクエリをエクセルに書き込む
    */
   public void writeQuery(String query) {
     // MessageDigest digest = MessageDigest.getInstance("SHA-512");
     String tableName = StringUtils.cut(query.toUpperCase(), "FROM ", " WHERE");
-    new WriteOneResultProcedure(book, tableName).execute(query);
+    new WriteQueryProcedure(book, tableName).execute(query);
   }
 
   /**
@@ -41,24 +38,5 @@ public class ExcelWriter {
    */
   public void writeSellectResult(String tableName, String sellectResult) {
     new WriteOneResultProcedure(book, tableName).execute(sellectResult);
-  }
-
-  /**
-   * エクセルファイルを書き込む
-   */
-  public void flush() {
-    FileOutputStream out = null;
-    try {
-      out = new FileOutputStream(XLSX_FILE_PATH);
-      book.write(out);
-    } catch (IOException ex) {
-      throw new RuntimeException("   !!!! Error " + this.getClass().getCanonicalName() + "@flush()", ex);
-    } finally {
-      try {
-        out.close();
-      } catch (IOException ex) {
-        throw new RuntimeException(" !!!! Error " + this.getClass().getCanonicalName() + "@flush()@close()", ex);
-      }
-    }
   }
 }

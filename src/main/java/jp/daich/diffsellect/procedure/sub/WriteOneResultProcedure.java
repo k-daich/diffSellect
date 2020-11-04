@@ -35,23 +35,24 @@ public class WriteOneResultProcedure {
         // 指定したテーブル名のシートがない場合は新規作成する
         if (sheetMap.get(tableName.hashCode()) == null) {
             // create sheet
-            sheet = book.createSheet(tableName);
+            this.sheet = book.createSheet(tableName);
             sheetMap.put(tableName.hashCode(), sheet);
         } else {
             // get existed sheet
-            sheet = sheetMap.get(tableName.hashCode());
+            this.sheet = sheetMap.get(tableName.hashCode());
             // sheet = book.getSheet(tableName);
         }
         // シートの行の高さのデフォルト設定を行う
         sheet.setDefaultRowHeightInPoints((short) 12);
         // シートの列幅のデフォルト設定を行う
         sheet.setDefaultColumnWidth((short) 32);
+
         // OpeCellをA1位置で初期化
         this.opeCell = new OpeCell(sheet, 0, 0);
     }
 
     public void execute(String sellectResult) {
-        LogUtil.startLog(sellectResult);;
+        LogUtil.startLog(sellectResult);
         initProcedure();
         mainProcedure(sellectResult);
         LogUtil.endLog();
