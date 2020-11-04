@@ -1,8 +1,8 @@
 package jp.daich.diffsellect.procedure.sub;
 
 import jp.daich.diffsellect.common.io.reader.TextReader;
-import jp.daich.diffsellect.common.util.LogUtil;
-import jp.daich.diffsellect.common.util.StringUtils;
+import jp.daich.diffsellect.util.LogUtil;
+import jp.daich.diffsellect.util.StringUtils;
 import jp.daich.diffsellect.procedure.constants.SqlTxtLineType;
 import jp.daich.diffsellect.view.dto.ExcelViewDto;
 
@@ -29,7 +29,7 @@ public class SqlTextReadLogic {
         // 読み込んだ行のタイプ（初期値：クエリより前に位置するその他行）
         SqlTxtLineType _lineType = SqlTxtLineType.OTHER_QUERY_BEFORE;
 
-        // 最終行に到達するまで1行ずつ読み込み
+        // SELLECT1件分の最終行に到達する or ファイル最終行に到達するまで1行ずつ読み込み
         while ((_lineStr = reader.readLine()) != null) {
             // 行タイプを判定し、設定する
             _lineType = judgeLineType(_lineStr, _lineType);
@@ -85,6 +85,12 @@ public class SqlTextReadLogic {
     private void setQueryInfo(ExcelViewDto viewDto, String lineStr) {
         // クエリの内容を設定する
         viewDto.setSqlQuery(lineStr);
+        // クエリの「FROM」「WHERE」の間の文字列（テーブル名）を切り出し、テーブル名を取得する
+        String tableName = StringUtils.cut(lineStr.toUpperCase(), "FROM ", " WHERE");
+        // テーブル名をDtoへ設定する
+        viewDto.setTableName(tableName);
+        // シート名（テーブル名+クエリのハッシュ値）を設定する
+        viewDto.setSheetName(tableName + lineStr.hashCode());
     }
 
     /**

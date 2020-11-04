@@ -1,8 +1,8 @@
 package jp.daich.diffsellect;
 
 import jp.daich.diffsellect.common.exception.DiffSellectException;
-import jp.daich.diffsellect.common.util.ArrayUtils;
-import jp.daich.diffsellect.common.util.StringUtils;
+import jp.daich.diffsellect.util.ArrayUtils;
+import jp.daich.diffsellect.util.StringUtils;
 import jp.daich.diffsellect.procedure.MainProcedure;
 
 public class Main {

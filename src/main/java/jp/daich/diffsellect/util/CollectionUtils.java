@@ -9,7 +9,7 @@ public class CollectionUtils {
      */
     private CollectionUtils() {}
 
-    public static String toString(Collection<Object> collection){
+    public static String toString(Collection<?> collection){
         StringBuffer sb = new StringBuffer("Collection ->");
         int i = 0;
         for (Object obj : collection) {

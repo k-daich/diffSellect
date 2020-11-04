@@ -15,7 +15,7 @@ import java.util.Map;
 
 import jp.daich.diffsellect.common.io.poi.entity.OpeCell;
 import jp.daich.diffsellect.common.io.poi.util.OperationCellsUtil;
-import jp.daich.diffsellect.common.util.LogUtil;
+import jp.daich.diffsellect.util.LogUtil;
 
 public class WriteOneResultProcedure {
 

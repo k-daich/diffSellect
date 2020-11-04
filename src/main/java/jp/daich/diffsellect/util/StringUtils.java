@@ -1,4 +1,4 @@
-package jp.daich.diffsellect.common.util;
+package jp.daich.diffsellect.util;
 
 public class StringUtils {
 

@@ -1,42 +1,81 @@
-package jp.daich.diffsellect.common.poi;
+package jp.daich.diffsellect.poi;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import jp.daich.diffsellect.common.util.StringUtils;
+import jp.daich.diffsellect.util.StringUtils;
 import jp.daich.diffsellect.procedure.sub.WriteOneResultProcedure;
 import jp.daich.diffsellect.procedure.sub.WriteQueryProcedure;
 
 public class ExcelWriter {
-
-  // SXSSF(xlsx)
-  private final XSSFWorkbook book = new XSSFWorkbook();
 
   /**
    * Constructor
    * 
    * @param tableName
    */
-  public ExcelWriter() {
+  public ExcelWriter(String filePath) {
+    this.filePath = filePath;
+  }
+
+  // SXSSF(xlsx)
+  private final XSSFWorkbook book = new XSSFWorkbook();
+
+  // Excel book file path
+  private final String filePath;
+
+  /**
+   * get sheet object. if sheet is not exist, return null.
+   * 
+   * @param sheetName
+   * @return sheet
+   */
+  public Sheet getSheet(String sheetName) {
+    return this.book.getSheet(sheetName);
   }
 
   /**
-   * Sellectのクエリをエクセルに書き込む
+   * create new sheet.
+   * 
+   * @param sheetName
+   * @return sheet
    */
-  public void writeQuery(String query) {
-    // MessageDigest digest = MessageDigest.getInstance("SHA-512");
-    String tableName = StringUtils.cut(query.toUpperCase(), "FROM ", " WHERE");
-    new WriteQueryProcedure(book, tableName).execute(query);
+  public Sheet createSheet(String sheetName) {
+    return this.book.createSheet(sheetName);
   }
 
   /**
-   * Sellect結果をエクセルに書き込む
+   * get Font Object.
+   * 
+   * @return font
    */
-  public void writeSellectResult(String tableName, String sellectResult) {
-    new WriteOneResultProcedure(book, tableName).execute(sellectResult);
+  public Font getFont() {
+    return this.book.createFont();
   }
+
+  /**
+   * エクセルファイルを書き込む
+   */
+  public void flush() {
+    FileOutputStream out = null;
+    try {
+      out = new FileOutputStream(filePath);
+      book.write(out);
+    } catch (IOException ex) {
+      throw new RuntimeException("   !!!! Error " + this.getClass().getCanonicalName() + "@flush()", ex);
+    } finally {
+      try {
+        out.close();
+      } catch (IOException ex) {
+        throw new RuntimeException(" !!!! Error " + this.getClass().getCanonicalName() + "@flush()@close()", ex);
+      }
+    }
+  }
+
 }

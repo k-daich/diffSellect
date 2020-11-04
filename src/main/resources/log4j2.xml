@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE project>  
+<!DOCTYPE project>
 <Configuration status="off">
 
 	<!-- Propertiesは、nameの値を変数として使える -->
-    <Properties>
-        <Property name="format1">%d{yyyy/MM/dd HH:mm:ss.SSS} [%t] %-6p %c{10} %m%n</Property>
-       <!-- ログのフォーマット 
+	<Properties>
+		<Property name="format1">%d{yyyy/MM/dd HH:mm:ss.SSS} [%t] %-6p %c{10} %m%n</Property>
+		<!-- ログのフォーマット 
    		%dは日時。{}に日時の形式を指定
    		%tはスレッド名
    		%-6pはログレベル名称を左詰めで6文字分出力する。「debug」であれば後ろに空白１文字が追加される。
@@ -14,21 +14,20 @@
    		%mはログメッセージ
    		%nは改行
       -->
-        <Property name="logfile">./logs/debugLog.log</Property>
-        <Property name="logfile-archive">./logs/debugLog_%d{yyyy-MM-dd}.log</Property>
-    </Properties>
-    
+		<Property name="logfile">./logs/debugLog.log</Property>
+		<Property name="logfile-archive">./logs/debugLog_%d{yyyy-MM-dd}.log</Property>
+	</Properties>
+
 	<Appenders>
 		<!-- コンソールに出力する設定 -->
-		<Console name="logfile001" target="SYSTEM_OUT">
+		<Console name="Console" target="SYSTEM_OUT">
 			<PatternLayout>
 				<pattern>${format1}</pattern>
 			</PatternLayout>
 		</Console>
 
 		<!-- ファイルに出力する設定 -->
-		<RollingFile name="logfile001" append="true" fileName="${logfile}"
-			filePattern="${logfile-archive}">
+		<RollingFile name="logfile001" append="true" fileName="${logfile}" filePattern="${logfile-archive}">
 			<PatternLayout>
 				<pattern>${format1}</pattern>
 			</PatternLayout>
@@ -40,7 +39,7 @@
 			<DefaultRolloverStrategy max="3"/>
 		</RollingFile>
 	</Appenders>
-	
+
 	<Loggers>
 		// trace以上のログを出力する
 		<Root level="trace">

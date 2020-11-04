@@ -11,8 +11,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 
 import jp.daich.diffsellect.common.io.poi.entity.OpeCell;
-import jp.daich.diffsellect.common.util.LogUtil;
-import jp.daich.diffsellect.common.util.StringUtils;
+import jp.daich.diffsellect.util.LogUtil;
+import jp.daich.diffsellect.util.StringUtils;
 
 public class OperationCellsUtil {
 

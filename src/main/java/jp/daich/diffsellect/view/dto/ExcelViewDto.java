@@ -24,6 +24,8 @@ public class ExcelViewDto {
 
     private String sqlQuery;
 
+    private String sheetName;
+
     private String[] columnNames;
 
     private List<String[]> resultSets = new ArrayList<>();
@@ -83,9 +85,25 @@ public class ExcelViewDto {
                 // Dtoの変数名と値を取得して文字列追加する
                 sb.append("name [" + field.getName() + "] value [" + ObjectUtil.toString(field.get(this)) + "]\n");
             } catch (IllegalArgumentException | IllegalAccessException e) {
-                e.printStackTrace();
+                throw new RuntimeException("Occured Reflect Error", e);
             }
         }
         return sb.toString();
+    }
+
+    public String getSheetName() {
+        return sheetName;
+    }
+
+    public void setSheetName(String sheetName) {
+        this.sheetName = sheetName;
+    }
+
+    public List<String[]> getResultSets() {
+        return resultSets;
+    }
+
+    public void setResultSets(List<String[]> resultSets) {
+        this.resultSets = resultSets;
     }
 }

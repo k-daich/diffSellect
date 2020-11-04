@@ -8,7 +8,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import jp.daich.diffsellect.common.io.poi.entity.OpeCell;
-import jp.daich.diffsellect.common.util.LogUtil;
+import jp.daich.diffsellect.util.LogUtil;
 
 public class WriteQueryProcedure {
 

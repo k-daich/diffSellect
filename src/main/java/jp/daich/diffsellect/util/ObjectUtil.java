@@ -2,7 +2,7 @@ package jp.daich.diffsellect.util;
 
 import java.util.Collection;
 
-import jp.daich.diffsellect.common.util.ArrayUtils;
+import jp.daich.diffsellect.util.ArrayUtils;
 
 public class ObjectUtil {
 
@@ -28,10 +28,10 @@ public class ObjectUtil {
         }
         // objがString型の配列の場合
         else if (obj instanceof String[]) {
-            return ArrayUtils.toString((String[])obj);
-        }
-        else if (obj instanceof Collection) {
-            CollectionUtils.toString((Collection)obj);
+            return ArrayUtils.toString((String[]) obj);
+        } else if (obj instanceof Collection<?>) {
+            LogUtil.debug("obj judged as Collection : " + obj);
+            CollectionUtils.toString((Collection<?>) obj);
         }
         return obj.toString();
     }

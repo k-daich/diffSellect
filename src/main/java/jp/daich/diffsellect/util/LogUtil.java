@@ -1,8 +1,8 @@
-package jp.daich.diffsellect.common.util;
+package jp.daich.diffsellect.util;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import jp.daich.diffsellect.common.util.ArrayUtils;
+import jp.daich.diffsellect.util.ArrayUtils;
 
 public class LogUtil {
 
