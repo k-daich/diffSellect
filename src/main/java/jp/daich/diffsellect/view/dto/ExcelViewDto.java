@@ -18,7 +18,7 @@ public class ExcelViewDto {
     public ExcelViewDto() {
     }
 
-    private Date sqlExecuteTime;
+    private String sqlExecuteTime;
 
     private String tableName;
 
@@ -30,11 +30,11 @@ public class ExcelViewDto {
 
     private List<String[]> resultSets = new ArrayList<>();
 
-    public Date getSqlExecuteTime() {
+    public String getSqlExecuteTime() {
         return sqlExecuteTime;
     }
 
-    public void setSqlExecuteTime(Date sqlExecuteTime) {
+    public void setSqlExecuteTime(String sqlExecuteTime) {
         this.sqlExecuteTime = sqlExecuteTime;
     }
 
@@ -83,7 +83,7 @@ public class ExcelViewDto {
             field.setAccessible(true);
             try {
                 // Dtoの変数名と値を取得して文字列追加する
-                sb.append("name [" + field.getName() + "] value [" + ObjectUtil.toString(field.get(this)) + "]\n");
+                sb.append("\nname [" + field.getName() + "] value [" + ObjectUtil.toString(field.get(this)) + "]");
             } catch (IllegalArgumentException | IllegalAccessException e) {
                 throw new RuntimeException("Occured Reflect Error", e);
             }

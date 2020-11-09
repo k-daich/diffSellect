@@ -34,8 +34,13 @@ public class SqlTextReadLogic {
             // 行タイプを判定し、設定する
             _lineType = judgeLineType(_lineStr, _lineType);
 
+            // 読み込んだ行がSQL実行時刻の行だった場合
+            if (_lineType == SqlTxtLineType.TIME_QUERY_BEFORE) {
+                // カラム名をDtoへ設定する
+                setSqlTime(_dto, _lineStr);
+            }
             // 読み込んだ行がクエリ行だった場合
-            if (_lineType == SqlTxtLineType.QUERY) {
+            else if (_lineType == SqlTxtLineType.SELECT_QUERY) {
                 // クエリ内容をDtoへ設定する
                 setQueryInfo(_dto, _lineStr);
             }
@@ -68,12 +73,23 @@ public class SqlTextReadLogic {
             case OTHER_QUERY_BEFORE:
                 return null;
             // 以下行タイプで読み込みを終えた場合、テキスト内容の並び、またはロジックが不正なのでエラーを投げる
-            case QUERY:
+            case TIME_QUERY_BEFORE:
+            case SELECT_QUERY:
             case COLUMNS_NAME:
                 throw new RuntimeException("Unexcepected Order of lines : Latest line type [" + _lineType + "]");
         }
         // 到達不可な箇所
         throw new RuntimeException("System Error : Unreachable Code");
+    }
+
+    /**
+     * SQL実行時刻行を読み込んだ際のDtoへの設定処理
+     * 
+     * @param viewDto
+     * @param lineStr
+     */
+    private void setSqlTime(ExcelViewDto viewDto, String lineStr) {
+        viewDto.setSqlExecuteTime(lineStr);
     }
 
     /**
@@ -125,29 +141,34 @@ public class SqlTextReadLogic {
         LogUtil.debug("preLineType [" + preLineType + "] , line String [" + line + "]");
         switch (preLineType) {
             case OTHER_QUERY_BEFORE:
-                // 現在行が">SQL"で始待っている場合、クエリの行
-                if (line.startsWith(">SQL")) {
-                    return SqlTxtLineType.QUERY;
+            case TIME_QUERY_BEFORE:
+                // 現在行が">SQL"で始待っており、かつSELECT句を持っている場合、クエリの行と判定する
+                if (line.startsWith(">SQL") && line.toUpperCase().indexOf("SELECT ") != -1) {
+                    return SqlTxtLineType.SELECT_QUERY;
                 }
+                else if(line.startsWith("Time    : ")){
+                    return SqlTxtLineType.TIME_QUERY_BEFORE;
+                }
+
                 return SqlTxtLineType.OTHER_QUERY_BEFORE;
-            case QUERY:
-                // クエリの次の行はカラム名の行
+            case SELECT_QUERY:
+                // クエリの次の行はカラム名の行と判定する
                 return SqlTxtLineType.COLUMNS_NAME;
             case COLUMNS_NAME:
                 // 現在行が空である場合
                 if ("".equals(line)) {
-                    // SELECT結果は0件であるためタイプはその他
+                    // SELECT結果は0件であるため1件のSELECT結果の終わりと判定する
                     return SqlTxtLineType.FIN_OF_ONE_RESULT;
                 }
-                // カラム名の次の行はSELECT結果（値）の行
+                // カラム名の次の行はSELECT結果（値）の行と判定する
                 return SqlTxtLineType.VALUES;
             case VALUES:
                 // 現在行が空である場合
                 if ("".equals(line)) {
-                    // SELECT結果の最終行（空行）であるため、タイプはその他
+                    // SELECT結果の最終行（空行）であるため、タイプは1件のSELECT結果の終わりと判定する
                     return SqlTxtLineType.FIN_OF_ONE_RESULT;
                 }
-                // 現在行に値がある場合はSELECT結果（値）の行
+                // 現在行に値がある場合はSELECT結果（値）の行と判定する
                 return SqlTxtLineType.VALUES;
             case FIN_OF_ONE_RESULT:
                 // 1件の最終行到達後に当メソッドを使用される想定内ため例外をスローする
