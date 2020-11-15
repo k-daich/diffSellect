@@ -9,8 +9,9 @@ import jp.daich.diffsellect.common.io.reader.TextReader;
 import jp.daich.diffsellect.view.dto.ExcelViewDto;
 import jp.daich.diffsellect.util.LogUtil;
 import jp.daich.diffsellect.poi.book.OpeBook;
+import jp.daich.diffsellect.poi.sheet.OpeSheet;
 import jp.daich.diffsellect.procedure.constants.SqlTxtLineType;
-import jp.daich.diffsellect.procedure.sub.ExcelBuildLogic;
+import jp.daich.diffsellect.poi.procedure.ExcelBuildLogic;
 import jp.daich.diffsellect.procedure.sub.SqlTextReadLogic;
 
 /**
@@ -39,14 +40,14 @@ public class MainProcedure {
             while ((_dto = _readLogic.readOneResult()) != null) {
                 // シート名（テーブル名@クエリのハッシュ値）を取得する
                 String _sheetName = _dto.getTableName() + "@" + _dto.getSqlQuery().hashCode();
-                Sheet _sheet = _book.getSheet(_sheetName);
+                OpeSheet _opeSheet = _book.getSheet(_sheetName);
                 // シートがnullの場合
-                if (_sheet == null) {
+                if (_opeSheet == null) {
                     // シートを作成する
-                    _sheet = _book.createSheet(_sheetName);
+                    _opeSheet = _book.createSheet(_sheetName);
                 }
                 // Dtoの内容を元にエクセルのシートオブジェクトへ設定する
-                new ExcelBuildLogic(_sheet, _book.getStyleMap()).buildOneResult(_dto);
+                new ExcelBuildLogic(_opeSheet, _book.getStyleMap()).buildOneResult(_dto);
             }
             // エクセルファイルを出力する
             _book.flush();

@@ -14,6 +14,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import jp.daich.diffsellect.poi.book.constants.FontMapKey;
 import jp.daich.diffsellect.poi.book.constants.StyleMapKey;
+import jp.daich.diffsellect.poi.sheet.OpeSheet;
 
 public class OpeBook {
 
@@ -49,6 +50,9 @@ public class OpeBook {
   // SXSSF(xlsx)
   private final XSSFWorkbook book;
 
+  // 全シートを保持するMap
+  private final Map<String, OpeSheet> sheetMap = new HashMap<>();
+
   // スタイルを保持するMap
   private final Map<StyleMapKey, CellStyle> styleMap = new HashMap<>();
 
@@ -61,24 +65,26 @@ public class OpeBook {
    * @param sheetName
    * @return sheet
    */
-  public Sheet getSheet(String sheetName) {
-    return this.book.getSheet(sheetName);
+  public OpeSheet getSheet(String sheetName) {
+    return this.sheetMap.get(sheetName);
   }
 
   /**
    * create new sheet.
    * 
    * @param sheetName
-   * @return sheet
+   * @return OpeSheet
    */
-  public Sheet createSheet(String sheetName) {
+  public OpeSheet createSheet(String sheetName) {
     Sheet _sheet = this.book.createSheet(sheetName);
     // シートの行の高さのデフォルト設定を行う
-    // _sheet.setDefaultRowHeightInPoints((short) 12);
+    // _sheet.setDefaultRowHeightInPoints((short) 11);
     // シートの列幅のデフォルト設定を行う
-    _sheet.setDefaultColumnWidth((short) 32);
+    _sheet.setDefaultColumnWidth((short) 24);
 
-    return _sheet;
+    OpeSheet _opeSheet = new OpeSheet(_sheet);
+    this.sheetMap.put(sheetName, _opeSheet);
+    return _opeSheet;
   }
 
   /**
@@ -100,14 +106,13 @@ public class OpeBook {
 
     _style.setWrapText(true);
 
-    // 枠線の色を設定する
+    // // 枠線の色を設定する
     // _style.setTopBorderColor(color.getIndex());
     // _style.setBottomBorderColor(color.getIndex());
     // _style.setLeftBorderColor(color.getIndex());
     // _style.setRightBorderColor(color.getIndex());
 
     _style.setFillBackgroundColor(color.index);
-    ;
     _style.setFont(font);
 
     return _style;

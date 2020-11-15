@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.ConditionalFormattingRule;
-import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.PatternFormatting;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -44,6 +43,13 @@ public class CellDriver {
 
     public void setCellValue(String value) {
         this.opeCell.setCellValue(value);
+    }
+
+    /**
+     * 1つ上に移動する
+     */
+    public void preY() {
+        this.opeCell.move(this.opeCell.getX(), this.opeCell.getY() - 1);
     }
 
     /**

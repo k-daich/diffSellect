@@ -1,13 +1,16 @@
-package jp.daich.diffsellect.procedure.sub;
+package jp.daich.diffsellect.poi.procedure;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Sheet;
 
 import jp.daich.diffsellect.poi.cell.CellDriver;
+import jp.daich.diffsellect.poi.cellid.bean.CellId;
+import jp.daich.diffsellect.poi.cellid.bean.FirstColumnValueCellId;
+import jp.daich.diffsellect.poi.cellid.bean.LastColumnValueCellId;
+import jp.daich.diffsellect.poi.sheet.OpeSheet;
 import jp.daich.diffsellect.util.LogUtil;
 import jp.daich.diffsellect.util.StringUtils;
 import jp.daich.diffsellect.view.dto.ExcelViewDto;
@@ -17,13 +20,13 @@ public class ExcelBuildLogic {
     /**
      * Constructor
      */
-    public ExcelBuildLogic(Sheet sheet, Map<String, CellStyle> styleMap) {
-        this.sheet = sheet;
+    public ExcelBuildLogic(OpeSheet opeSheet, Map<String, CellStyle> styleMap) {
+        this.opeSheet = opeSheet;
         this.styleMap = styleMap;
     }
 
     // 書き込み対象のシートオブジェクト
-    private final Sheet sheet;
+    private final OpeSheet opeSheet;
     // スタイル設定用オブジェクト
     private final Map<String, CellStyle> styleMap;
 
@@ -37,7 +40,7 @@ public class ExcelBuildLogic {
         LogUtil.startLog(dto.toString());
 
         // セルオブジェクトを取得する（初期位置：A1セル）
-        CellDriver _cellDriver = new CellDriver(this.sheet, this.styleMap, 0, 0);
+        CellDriver _cellDriver = new CellDriver(this.opeSheet.getSheet(), this.styleMap, 0, 0);
 
         // 検索回数カウント値を設定する
         int _selectCount = setSelectCount(_cellDriver);
@@ -109,6 +112,7 @@ public class ExcelBuildLogic {
         cellDriver.setCellValue(dto.getSqlExecuteTime());
         // １つ下に移動する
         cellDriver.nextY();
+
         // 検索結果件数の分だけ繰り返す
         for (int i = 0; i < dto.getResultSets().size(); i++) {
             // カラム名を羅列する初期位置（A2セル）を取得する
@@ -119,23 +123,40 @@ public class ExcelBuildLogic {
             cellDriver.setCellValue(getResultsCountComment(selectCount, dto.getResultSets().size(), i + 1));
             // １つ下に移動する
             cellDriver.nextY();
+            // 検索結果値を入れる開始位置をセルMapに登録する
+            this.opeSheet.putCellPostion(new FirstColumnValueCellId(selectCount, i + 1),
+                    cellDriver.getCellAddressStr());
 
-            // 検索結果値を入れる開始位置を取得する
-            String startCellVal = cellDriver.getCellAddressStr();
             // カラムの数の分だけ繰り返す
             for (String komkValue : dto.getResultSets().get(i)) {
                 cellDriver.setCellValue(komkValue);
                 cellDriver.nextY();
             }
-            // 検索結果値を入れる開始位置を取得する
-            String endCellVal = cellDriver.getCellAddressStr();
-        }
+            // 検索結果値を入れる開始位置をセルMapに登録する
+            this.opeSheet.putCellPostion(new LastColumnValueCellId(selectCount, i + 1), cellDriver.getCellAddressStr());
 
-        // if() {
-        // cellDriver.setSheetConditionalFormat(startCellVal + "=" +
-        // cellDriver.getStringNextCellValue(-1, 0),
-        // startCellVal + ":" + endCellVal, IndexedColors.YELLOW);
-        // }
+            // 2回目以降のSELECT結果の出力である場合、前回レコードと差異があるかの条件付き書式を設定する
+            if (selectCount != 1) {
+                LogUtil.debug("条件付き書式 [条件] : "
+                        + this.opeSheet.getCellPostion(new FirstColumnValueCellId(selectCount - 1, i + 1))
+                        + "="
+                        + this.opeSheet.getCellPostion(new FirstColumnValueCellId(selectCount, i + 1)));
+                LogUtil.debug("条件付き書式 [範囲] : "
+                        + this.opeSheet.getCellPostion(new FirstColumnValueCellId(selectCount - 1, i + 1))
+                        + ":"
+                        + this.opeSheet.getCellPostion(new LastColumnValueCellId(selectCount - 1, i + 1)));
+                cellDriver.setSheetConditionalFormat(
+                        this.opeSheet.getCellPostion(new FirstColumnValueCellId(selectCount - 1, i + 1))
+                                + "="
+                                + this.opeSheet
+                                        .getCellPostion(new FirstColumnValueCellId(selectCount, i + 1)),
+                        this.opeSheet.getCellPostion(new FirstColumnValueCellId(selectCount, i + 1))
+                                + ":"
+                                + this.opeSheet
+                                        .getCellPostion(new LastColumnValueCellId(selectCount, i + 1)),
+                        IndexedColors.YELLOW);
+            }
+        }
     }
 
     /**
@@ -157,4 +178,5 @@ public class ExcelBuildLogic {
     private String cutCount(String countComment) {
         return StringUtils.cut(countComment, "全体で同じSELECT分を", "回流しました。");
     }
+
 }

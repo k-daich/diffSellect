@@ -14,8 +14,9 @@
    		%mはログメッセージ
    		%nは改行
       -->
-		<Property name="logfile">./logs/debugLog.log</Property>
-		<Property name="logfile-archive">./logs/debugLog_%d{yyyy-MM-dd}.log</Property>
+		<Property name="logfile">./logs/debug.log</Property>
+		<!-- <Property name="logfile-archive">./logs/debugLog_%d{yyyy-MM-dd}.log</Property> -->
+		<Property name="logfile-archive">./logs/debug_%d{yyyy-MM-dd-mm-ss}.log</Property>
 	</Properties>
 
 	<Appenders>
@@ -27,16 +28,16 @@
 		</Console>
 
 		<!-- ファイルに出力する設定 -->
-		<RollingFile name="logfile001" append="true" fileName="${logfile}" filePattern="${logfile-archive}">
+		<RollingFile name="logfile001" append="false" fileName="${logfile}" filePattern="${logfile-archive}">
 			<PatternLayout>
 				<pattern>${format1}</pattern>
 			</PatternLayout>
 			<Policies>
-				//　1MBに達したらローテーションのファイルを作成する
-				<SizeBasedTriggeringPolicy size="1MB"/>
+				<!-- 1MBに達したらローテーションのファイルを作成する -->
+				<!-- <SizeBasedTriggeringPolicy size="1MB"/> -->
 			</Policies>
-			//　ローテーションのファイルは、3つ持つ
-			<DefaultRolloverStrategy max="3"/>
+			<!-- ローテーションのファイルは、3つ持つ -->
+			<!-- <DefaultRolloverStrategy max="3"/> -->
 		</RollingFile>
 	</Appenders>
 

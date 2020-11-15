@@ -67,7 +67,7 @@ public class OpeCell {
         Row row = this.sheet.getRow(y);
         if (row == null) {
             row = this.sheet.createRow(y);
-            row.setHeight((short)-1);
+            row.setHeightInPoints((short)-1);
         }
         return row;
     }
