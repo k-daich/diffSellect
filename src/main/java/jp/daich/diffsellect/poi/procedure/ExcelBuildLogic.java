@@ -1,13 +1,12 @@
 package jp.daich.diffsellect.poi.procedure;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.IndexedColors;
 
 import jp.daich.diffsellect.poi.cell.CellDriver;
-import jp.daich.diffsellect.poi.cellid.bean.CellId;
 import jp.daich.diffsellect.poi.cellid.bean.FirstColumnValueCellId;
 import jp.daich.diffsellect.poi.cellid.bean.LastColumnValueCellId;
 import jp.daich.diffsellect.poi.sheet.OpeSheet;
@@ -105,9 +104,11 @@ public class ExcelBuildLogic {
      */
     private void setColumnValues(ExcelViewDto dto, CellDriver cellDriver, int selectCount) {
         // カラム名を羅列する初期位置（A2セル）を取得する
-        cellDriver.move(1, 0);
+        cellDriver.move(1, 1);
         // 初期値(B2セル)から右に空のセルが出るまで移動する
         cellDriver.goEmptyCellForRight();
+        // １つ上に移動する
+        cellDriver.preY();
         // SQL実行時刻を設定する
         cellDriver.setCellValue(dto.getSqlExecuteTime());
         // １つ下に移動する
@@ -129,34 +130,36 @@ public class ExcelBuildLogic {
 
             // カラムの数の分だけ繰り返す
             for (String komkValue : dto.getResultSets().get(i)) {
+                this.opeSheet.drawBorder(cellDriver.getCellAddressStr() + ":" + cellDriver.getCellAddressStr(),
+                        BorderStyle.MEDIUM);
                 cellDriver.setCellValue(komkValue);
                 cellDriver.nextY();
             }
+            // １つ上に移動する
+            cellDriver.preY();
             // 検索結果値を入れる開始位置をセルMapに登録する
             this.opeSheet.putCellPostion(new LastColumnValueCellId(selectCount, i + 1), cellDriver.getCellAddressStr());
 
             // 2回目以降のSELECT結果の出力である場合、前回レコードと差異があるかの条件付き書式を設定する
             if (selectCount != 1) {
                 LogUtil.debug("条件付き書式 [条件] : "
-                        + this.opeSheet.getCellPostion(new FirstColumnValueCellId(selectCount - 1, i + 1))
-                        + "="
+                        + this.opeSheet.getCellPostion(new FirstColumnValueCellId(selectCount - 1, i + 1)) + "<>"
                         + this.opeSheet.getCellPostion(new FirstColumnValueCellId(selectCount, i + 1)));
-                LogUtil.debug("条件付き書式 [範囲] : "
-                        + this.opeSheet.getCellPostion(new FirstColumnValueCellId(selectCount - 1, i + 1))
-                        + ":"
-                        + this.opeSheet.getCellPostion(new LastColumnValueCellId(selectCount - 1, i + 1)));
+                LogUtil.debug(
+                        "条件付き書式 [範囲] : " + this.opeSheet.getCellPostion(new FirstColumnValueCellId(selectCount, i + 1))
+                                + ":" + this.opeSheet.getCellPostion(new LastColumnValueCellId(selectCount, i + 1)));
                 cellDriver.setSheetConditionalFormat(
-                        this.opeSheet.getCellPostion(new FirstColumnValueCellId(selectCount - 1, i + 1))
-                                + "="
-                                + this.opeSheet
-                                        .getCellPostion(new FirstColumnValueCellId(selectCount, i + 1)),
-                        this.opeSheet.getCellPostion(new FirstColumnValueCellId(selectCount, i + 1))
-                                + ":"
-                                + this.opeSheet
-                                        .getCellPostion(new LastColumnValueCellId(selectCount, i + 1)),
+                        this.opeSheet.getCellPostion(new FirstColumnValueCellId(selectCount - 1, i + 1)) + "<>"
+                                + this.opeSheet.getCellPostion(new FirstColumnValueCellId(selectCount, i + 1)),
+                        this.opeSheet.getCellPostion(new FirstColumnValueCellId(selectCount, i + 1)) + ":"
+                                + this.opeSheet.getCellPostion(new LastColumnValueCellId(selectCount, i + 1)),
                         IndexedColors.YELLOW);
             }
         }
+        // this.opeSheet.drawBorder(this.opeSheet.getCellPostion(new
+        // FirstColumnValueCellId(selectCount, 1)) + ":"
+        // + this.opeSheet.getCellPostion(new LastColumnValueCellId(selectCount,
+        // dto.getResultSets().size())), BorderStyle.MEDIUM);
     }
 
     /**

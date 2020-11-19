@@ -3,7 +3,10 @@ package jp.daich.diffsellect.poi.sheet;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.RegionUtil;
 
 import jp.daich.diffsellect.poi.cellid.bean.CellId;
 import jp.daich.diffsellect.util.LogUtil;
@@ -46,8 +49,22 @@ public class OpeSheet {
      * @return
      */
     public String getCellPostion(CellId cellId) {
-        LogUtil.debug("[GET getCellPostion] cellId [" + cellId.toString() + "], cellPosition [" + this.cellPositionMap.get(cellId) + "]");
+        LogUtil.debug("[GET getCellPostion] cellId [" + cellId.toString() + "], cellPosition ["
+                + this.cellPositionMap.get(cellId) + "]");
         return this.cellPositionMap.get(cellId);
     }
 
+    /**
+     * 
+     * @param range
+     * @param style
+     */
+    public void drawBorder(String range, BorderStyle style) {
+        LogUtil.debug("drawBorder [range : " + range + "]");
+        CellRangeAddress region = CellRangeAddress.valueOf(range);
+        RegionUtil.setBorderTop(style, region, this.sheet);
+        RegionUtil.setBorderBottom(style, region, this.sheet);
+        RegionUtil.setBorderLeft(style, region, this.sheet);
+        RegionUtil.setBorderRight(style, region, this.sheet);
+    }
 }

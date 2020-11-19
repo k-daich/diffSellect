@@ -19,7 +19,7 @@ import jp.daich.diffsellect.procedure.sub.SqlTextReadLogic;
  */
 public class MainProcedure {
 
-    public void execute(String sqlFilePath) {
+    public void execute(String sqlFilePath, String outPutFilePath) {
         // 開始ログ書き込み
         LogUtil.startLog(sqlFilePath);
         // sql結果ファイル読込ロジック
@@ -33,8 +33,7 @@ public class MainProcedure {
             // 読み込んだ現在行の文字列
             ExcelViewDto _dto;
             // 操作するブックオブジェクト
-            OpeBook _book = new OpeBook(".\\outfile" + new SimpleDateFormat("yyyy_MM_dd(E)HH_mm").format(new Date())
-            + ".xlsx");
+            OpeBook _book = new OpeBook(outPutFilePath);
 
             // SQL結果ファイルを最終行まで1行ずつ読み込む
             while ((_dto = _readLogic.readOneResult()) != null) {
