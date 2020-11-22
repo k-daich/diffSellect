@@ -10,7 +10,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.SheetConditionalFormatting;
 import org.apache.poi.ss.util.CellRangeAddress;
 
-import jp.daich.diffsellect.poi.book.constants.StyleMapKey;
+import jp.daich.diffsellect.poi.book.style.constants.StyleMapKey;
 import jp.daich.diffsellect.util.LogUtil;
 import jp.daich.diffsellect.util.StringUtils;
 
@@ -25,7 +25,7 @@ public class CellDriver {
      */
     public CellDriver(Sheet sheet, Map<String, CellStyle> styleMap, int xPostion, int yPosition) {
         this.styleMap = styleMap;
-        this.opeCell = new OpeCell(sheet, styleMap.get(StyleMapKey.NON_BORDER), xPostion, yPosition);
+        this.opeCell = new OpeCell(sheet, styleMap.get(StyleMapKey.NORMAL), xPostion, yPosition);
     }
 
     // セル操作用エンティティ
@@ -131,7 +131,12 @@ public class CellDriver {
         conditionFormat.addConditionalFormatting(regions, rule1);
     }
 
+    /**
+     * 
+     * @param key
+     */
     public void setStyle(StyleMapKey key) {
+        LogUtil.debug("setStyle key [" + key.toString() + "]");
         this.opeCell.setStyle(styleMap.get(key));
     }
 

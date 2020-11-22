@@ -4,21 +4,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
 
+import jp.daich.diffsellect.poi.book.style.constants.StyleMapKey;
 import jp.daich.diffsellect.poi.cellid.bean.CellId;
 import jp.daich.diffsellect.util.LogUtil;
 
 public class OpeSheet {
 
-    public OpeSheet(Sheet sheet) {
+    public OpeSheet(Sheet sheet, Map<StyleMapKey, CellStyle> styleMap) {
         this.sheet = sheet;
+        this.styleMap = styleMap;
     }
 
     // シート
     private final Sheet sheet;
+
+    // スタイルを保持するMap
+    private final Map<StyleMapKey, CellStyle> styleMap;
 
     // エクセルに書き込んだ位置情報を保持するMap
     private final Map<CellId, String> cellPositionMap = new HashMap<>();
@@ -30,6 +36,15 @@ public class OpeSheet {
      */
     public Sheet getSheet() {
         return this.sheet;
+    }
+
+    /**
+     * return styleMap
+     * 
+     * @return
+     */
+    public Map<StyleMapKey, CellStyle> getStyleMap() {
+        return this.styleMap;
     }
 
     /**

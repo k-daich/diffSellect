@@ -1,6 +1,6 @@
 target
 classes
-mvnBuildTest.xlsx
+buildTest.xlsx
 result*
 logs
 test

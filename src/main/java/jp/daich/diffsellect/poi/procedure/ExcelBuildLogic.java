@@ -6,6 +6,7 @@ import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.IndexedColors;
 
+import jp.daich.diffsellect.poi.book.style.constants.StyleMapKey;
 import jp.daich.diffsellect.poi.cell.CellDriver;
 import jp.daich.diffsellect.poi.cellid.bean.FirstColumnValueCellId;
 import jp.daich.diffsellect.poi.cellid.bean.LastColumnValueCellId;
@@ -21,13 +22,16 @@ public class ExcelBuildLogic {
      */
     public ExcelBuildLogic(OpeSheet opeSheet, Map<String, CellStyle> styleMap) {
         this.opeSheet = opeSheet;
-        this.styleMap = styleMap;
+        // セルオブジェクトを取得する（初期位置：A1セル）
+        cellDriver = new CellDriver(opeSheet.getSheet(), styleMap, 0, 0);
     }
 
     // 書き込み対象のシートオブジェクト
     private final OpeSheet opeSheet;
-    // スタイル設定用オブジェクト
-    private final Map<String, CellStyle> styleMap;
+    // // スタイル設定用オブジェクト
+    // private final Map<String, CellStyle> styleMap;
+    // セル操作オブジェクト
+    CellDriver cellDriver;
 
     /**
      * SELLECT1件分の内容をエクセルへ書き込む
@@ -38,17 +42,14 @@ public class ExcelBuildLogic {
         // 開始ログ
         LogUtil.startLog(dto.toString());
 
-        // セルオブジェクトを取得する（初期位置：A1セル）
-        CellDriver _cellDriver = new CellDriver(this.opeSheet.getSheet(), this.styleMap, 0, 0);
-
         // 検索回数カウント値を設定する
-        int _selectCount = setSelectCount(_cellDriver);
+        int _selectCount = setSelectCount(this.cellDriver);
 
         // カラム名を設定する
-        setColumnNames(dto, _cellDriver);
+        setColumnNames(dto, this.cellDriver);
 
         // 検索結果値を設定する
-        setColumnValues(dto, _cellDriver, _selectCount);
+        setColumnValues(dto, this.cellDriver, _selectCount);
 
         // 終了ログ
         LogUtil.endLog();
@@ -120,7 +121,8 @@ public class ExcelBuildLogic {
             cellDriver.move(1, 1);
             // 初期値(B2セル)から右に空のセルが出るまで移動する
             cellDriver.goEmptyCellForRight();
-            // 検索結果件数を設定する
+            // スタイルを設定し、検索結果件数をセル値に設定する
+            setTopCellStyle(cellDriver, i + 1, dto.getResultSets().size());
             cellDriver.setCellValue(getResultsCountComment(selectCount, dto.getResultSets().size(), i + 1));
             // １つ下に移動する
             cellDriver.nextY();
@@ -130,13 +132,17 @@ public class ExcelBuildLogic {
 
             // カラムの数の分だけ繰り返す
             for (String komkValue : dto.getResultSets().get(i)) {
-                this.opeSheet.drawBorder(cellDriver.getCellAddressStr() + ":" + cellDriver.getCellAddressStr(),
-                        BorderStyle.MEDIUM);
+                // セルのスタイルを設定する
+                setMiddleCellStyle(cellDriver, i + 1, dto.getResultSets().size());
+                // セルの値を設定する
                 cellDriver.setCellValue(komkValue);
+                // 1つ下に移動する
                 cellDriver.nextY();
             }
             // １つ上に移動する
             cellDriver.preY();
+            // セルのスタイルを設定する
+            setBottomCellStyle(cellDriver, i + 1, dto.getResultSets().size());
             // 検索結果値を入れる開始位置をセルMapに登録する
             this.opeSheet.putCellPostion(new LastColumnValueCellId(selectCount, i + 1), cellDriver.getCellAddressStr());
 
@@ -156,10 +162,68 @@ public class ExcelBuildLogic {
                         IndexedColors.YELLOW);
             }
         }
-        // this.opeSheet.drawBorder(this.opeSheet.getCellPostion(new
-        // FirstColumnValueCellId(selectCount, 1)) + ":"
-        // + this.opeSheet.getCellPostion(new LastColumnValueCellId(selectCount,
-        // dto.getResultSets().size())), BorderStyle.MEDIUM);
+        this.opeSheet.drawBorder(
+                this.opeSheet.getCellPostion(new FirstColumnValueCellId(selectCount, 1)) + ":"
+                        + this.opeSheet
+                                .getCellPostion(new LastColumnValueCellId(selectCount, dto.getResultSets().size())),
+                BorderStyle.MEDIUM);
+    }
+
+    private void setTopCellStyle(CellDriver cellDriver, int whatNumRecord, int allRecordNum) {
+        // 全レコード数が1の場合
+        if (allRecordNum == 1) {
+            cellDriver.setStyle(StyleMapKey.RANGE_BOX_ONE_COLUMN_TOP);
+        }
+        // 複数レコードの最初だった場合
+        else if (whatNumRecord == 1) {
+            cellDriver.setStyle(StyleMapKey.RANGE_BOX_LEFT_TOP);
+        }
+        // 複数レコードの最後だった場合
+        else if (whatNumRecord == allRecordNum) {
+            cellDriver.setStyle(StyleMapKey.RANGE_BOX_RIGHT_TOP);
+        }
+        // 複数レコードの中間だった場合
+        else {
+            cellDriver.setStyle(StyleMapKey.RANGE_BOX_MIDDLE_TOP);
+        }
+    }
+
+    private void setMiddleCellStyle(CellDriver cellDriver, int whatNumRecord, int allRecordNum) {
+        // 全レコード数が1の場合
+        if (allRecordNum == 1) {
+            cellDriver.setStyle(StyleMapKey.RANGE_BOX_ONE_COLUMN_MIDDLE);
+        }
+        // 複数レコードの最初だった場合
+        else if (whatNumRecord == 1) {
+            cellDriver.setStyle(StyleMapKey.RANGE_BOX_LEFT_MIDDLE);
+        }
+        // 複数レコードの最後だった場合
+        else if (whatNumRecord == allRecordNum) {
+            cellDriver.setStyle(StyleMapKey.RANGE_BOX_RIGHT_MIDDLE);
+        }
+        // 複数レコードの中間だった場合
+        else {
+            cellDriver.setStyle(StyleMapKey.RANGE_BOX_MIDDLE_MIDDLE);
+        }
+    }
+
+    private void setBottomCellStyle(CellDriver cellDriver, int whatNumRecord, int allRecordNum) {
+        // 全レコード数が1の場合
+        if (allRecordNum == 1) {
+            cellDriver.setStyle(StyleMapKey.RANGE_BOX_ONE_COLUMN_BOTTOM);
+        }
+        // 複数レコードの最初だった場合
+        else if (whatNumRecord == 1) {
+            cellDriver.setStyle(StyleMapKey.RANGE_BOX_LEFT_BOTTOM);
+        }
+        // 複数レコードの最後だった場合
+        else if (whatNumRecord == allRecordNum) {
+            cellDriver.setStyle(StyleMapKey.RANGE_BOX_RIGHT_BOTTOM);
+        }
+        // 複数レコードの中間だった場合
+        else {
+            cellDriver.setStyle(StyleMapKey.RANGE_BOX_MIDDLE_BOTTOM);
+        }
     }
 
     /**

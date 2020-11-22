@@ -13,7 +13,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import jp.daich.diffsellect.poi.book.constants.FontMapKey;
-import jp.daich.diffsellect.poi.book.constants.StyleMapKey;
+import jp.daich.diffsellect.poi.book.style.constants.StyleMapKey;
+import jp.daich.diffsellect.poi.cell.style.CellStyleBuilder;
 import jp.daich.diffsellect.poi.sheet.OpeSheet;
 
 public class OpeBook {
@@ -34,14 +35,71 @@ public class OpeBook {
 
     // スタイルオブジェクトの生成＆Mapへの登録
     // 罫線なしスタイルをMapに登録する
-    this.styleMap.put(StyleMapKey.NON_BORDER,
-        createStyle(BorderStyle.NONE, IndexedColors.WHITE, this.fontMap.get(FontMapKey.MIDDLE)));
-    // 罫線ありスタイルをMapに登録する
-    this.styleMap.put(StyleMapKey.BORDER,
-        createStyle(BorderStyle.HAIR, IndexedColors.WHITE, this.fontMap.get(FontMapKey.MIDDLE)));
-    // 罫線あり/黄色背景スタイルをMapに登録する
-    this.styleMap.put(StyleMapKey.NON_BORDER,
-        createStyle(BorderStyle.NONE, IndexedColors.WHITE, this.fontMap.get(FontMapKey.MIDDLE)));
+    this.styleMap.put(StyleMapKey.NORMAL,
+        new CellStyleBuilder(this.book, IndexedColors.WHITE, true, this.fontMap.get(FontMapKey.MIDDLE)).build());
+    // 罫線なし文字小さめスタイルをMapに登録する
+    this.styleMap.put(StyleMapKey.SMALL_TEXT,
+        new CellStyleBuilder(this.book, IndexedColors.WHITE, true, this.fontMap.get(FontMapKey.MIDDLE)).build());
+    // 罫線ありスタイル（左上）をMapに登録する
+    this.styleMap.put(StyleMapKey.RANGE_BOX_LEFT_TOP,
+        new CellStyleBuilder(this.book, IndexedColors.SKY_BLUE, true, this.fontMap.get(FontMapKey.MIDDLE))
+            .borderTop(BorderStyle.THICK).borderRight(BorderStyle.HAIR).borderBottom(BorderStyle.HAIR)
+            .borderLeft(BorderStyle.THICK).build());
+    // 罫線ありスタイル（左中間）をMapに登録する
+    this.styleMap.put(StyleMapKey.RANGE_BOX_LEFT_MIDDLE,
+        new CellStyleBuilder(this.book, IndexedColors.AQUA, true, this.fontMap.get(FontMapKey.MIDDLE))
+            .borderTop(BorderStyle.HAIR).borderRight(BorderStyle.HAIR).borderBottom(BorderStyle.HAIR)
+            .borderLeft(BorderStyle.THICK).build());
+    // 罫線ありスタイル（左下）をMapに登録する
+    this.styleMap.put(StyleMapKey.RANGE_BOX_LEFT_BOTTOM,
+        new CellStyleBuilder(this.book, IndexedColors.WHITE, true, this.fontMap.get(FontMapKey.MIDDLE))
+            .borderTop(BorderStyle.HAIR).borderRight(BorderStyle.HAIR).borderBottom(BorderStyle.THICK)
+            .borderLeft(BorderStyle.THICK).build());
+    // 罫線ありスタイル（中間上）をMapに登録する
+    this.styleMap.put(StyleMapKey.RANGE_BOX_MIDDLE_TOP,
+        new CellStyleBuilder(this.book, IndexedColors.WHITE, true, this.fontMap.get(FontMapKey.MIDDLE))
+            .borderTop(BorderStyle.THICK).borderRight(BorderStyle.HAIR).borderBottom(BorderStyle.HAIR)
+            .borderLeft(BorderStyle.HAIR).build());
+    // 罫線ありスタイル（中間）をMapに登録する
+    this.styleMap.put(StyleMapKey.RANGE_BOX_MIDDLE_MIDDLE,
+        new CellStyleBuilder(this.book, IndexedColors.WHITE, true, this.fontMap.get(FontMapKey.MIDDLE))
+            .borderTop(BorderStyle.HAIR).borderRight(BorderStyle.HAIR).borderBottom(BorderStyle.HAIR)
+            .borderLeft(BorderStyle.HAIR).build());
+    // 罫線ありスタイル（中間下）をMapに登録する
+    this.styleMap.put(StyleMapKey.RANGE_BOX_MIDDLE_BOTTOM,
+        new CellStyleBuilder(this.book, IndexedColors.WHITE, true, this.fontMap.get(FontMapKey.MIDDLE))
+            .borderTop(BorderStyle.HAIR).borderRight(BorderStyle.HAIR).borderBottom(BorderStyle.THICK)
+            .borderLeft(BorderStyle.HAIR).build());
+    // 罫線ありスタイル（右上）をMapに登録する
+    this.styleMap.put(StyleMapKey.RANGE_BOX_RIGHT_TOP,
+        new CellStyleBuilder(this.book, IndexedColors.WHITE, true, this.fontMap.get(FontMapKey.MIDDLE))
+            .borderTop(BorderStyle.THICK).borderRight(BorderStyle.THICK).borderBottom(BorderStyle.HAIR)
+            .borderLeft(BorderStyle.HAIR).build());
+    // 罫線ありスタイル（右中間）をMapに登録する
+    this.styleMap.put(StyleMapKey.RANGE_BOX_RIGHT_MIDDLE,
+        new CellStyleBuilder(this.book, IndexedColors.WHITE, true, this.fontMap.get(FontMapKey.MIDDLE))
+            .borderTop(BorderStyle.HAIR).borderRight(BorderStyle.THICK).borderBottom(BorderStyle.HAIR)
+            .borderLeft(BorderStyle.HAIR).build());
+    // 罫線ありスタイル（右下）をMapに登録する
+    this.styleMap.put(StyleMapKey.RANGE_BOX_RIGHT_BOTTOM,
+        new CellStyleBuilder(this.book, IndexedColors.WHITE, true, this.fontMap.get(FontMapKey.MIDDLE))
+            .borderTop(BorderStyle.HAIR).borderRight(BorderStyle.THICK).borderBottom(BorderStyle.THICK)
+            .borderLeft(BorderStyle.HAIR).build());
+    // 罫線ありスタイル（1列上）をMapに登録する
+    this.styleMap.put(StyleMapKey.RANGE_BOX_ONE_COLUMN_TOP,
+        new CellStyleBuilder(this.book, IndexedColors.WHITE, true, this.fontMap.get(FontMapKey.MIDDLE))
+            .borderTop(BorderStyle.THICK).borderRight(BorderStyle.THICK).borderBottom(BorderStyle.HAIR)
+            .borderLeft(BorderStyle.THICK).build());
+    // 罫線ありスタイル（1列中間）をMapに登録する
+    this.styleMap.put(StyleMapKey.RANGE_BOX_ONE_COLUMN_MIDDLE,
+        new CellStyleBuilder(this.book, IndexedColors.WHITE, true, this.fontMap.get(FontMapKey.MIDDLE))
+            .borderTop(BorderStyle.HAIR).borderRight(BorderStyle.THICK).borderBottom(BorderStyle.HAIR)
+            .borderLeft(BorderStyle.THICK).build());
+    // 罫線ありスタイル（1列下）をMapに登録する
+    this.styleMap.put(StyleMapKey.RANGE_BOX_ONE_COLUMN_BOTTOM,
+        new CellStyleBuilder(this.book, IndexedColors.WHITE, true, this.fontMap.get(FontMapKey.MIDDLE))
+            .borderTop(BorderStyle.HAIR).borderRight(BorderStyle.THICK).borderBottom(BorderStyle.THICK)
+            .borderLeft(BorderStyle.THICK).build());
   }
 
   // Excel book file path
@@ -82,40 +140,9 @@ public class OpeBook {
     // シートの列幅のデフォルト設定を行う
     _sheet.setDefaultColumnWidth((short) 24);
 
-    OpeSheet _opeSheet = new OpeSheet(_sheet);
+    OpeSheet _opeSheet = new OpeSheet(_sheet, this.styleMap);
     this.sheetMap.put(sheetName, _opeSheet);
     return _opeSheet;
-  }
-
-  /**
-   * 
-   * 
-   * @param borderStyle
-   * @param color
-   * @param font
-   */
-  private CellStyle createStyle(BorderStyle borderStyle, IndexedColors color, Font font) {
-
-    CellStyle _style = this.book.createCellStyle();
-
-    // 枠線のスタイルを設定する
-    _style.setBorderTop(borderStyle);
-    _style.setBorderBottom(borderStyle);
-    _style.setBorderLeft(borderStyle);
-    _style.setBorderRight(borderStyle);
-
-    _style.setWrapText(true);
-
-    // // 枠線の色を設定する
-    // _style.setTopBorderColor(color.getIndex());
-    // _style.setBottomBorderColor(color.getIndex());
-    // _style.setLeftBorderColor(color.getIndex());
-    // _style.setRightBorderColor(color.getIndex());
-
-    _style.setFillBackgroundColor(color.index);
-    _style.setFont(font);
-
-    return _style;
   }
 
   /**
