@@ -42,12 +42,12 @@ public class OpeBook {
         new CellStyleBuilder(this.book, IndexedColors.WHITE, true, this.fontMap.get(FontMapKey.MIDDLE)).build());
     // 罫線ありスタイル（左上）をMapに登録する
     this.styleMap.put(StyleMapKey.RANGE_BOX_LEFT_TOP,
-        new CellStyleBuilder(this.book, IndexedColors.SKY_BLUE, true, this.fontMap.get(FontMapKey.MIDDLE))
+        new CellStyleBuilder(this.book, IndexedColors.WHITE, true, this.fontMap.get(FontMapKey.MIDDLE))
             .borderTop(BorderStyle.THICK).borderRight(BorderStyle.HAIR).borderBottom(BorderStyle.HAIR)
             .borderLeft(BorderStyle.THICK).build());
     // 罫線ありスタイル（左中間）をMapに登録する
     this.styleMap.put(StyleMapKey.RANGE_BOX_LEFT_MIDDLE,
-        new CellStyleBuilder(this.book, IndexedColors.AQUA, true, this.fontMap.get(FontMapKey.MIDDLE))
+        new CellStyleBuilder(this.book, IndexedColors.WHITE, true, this.fontMap.get(FontMapKey.MIDDLE))
             .borderTop(BorderStyle.HAIR).borderRight(BorderStyle.HAIR).borderBottom(BorderStyle.HAIR)
             .borderLeft(BorderStyle.THICK).build());
     // 罫線ありスタイル（左下）をMapに登録する
@@ -139,6 +139,8 @@ public class OpeBook {
     // _sheet.setDefaultRowHeightInPoints((short) 11);
     // シートの列幅のデフォルト設定を行う
     _sheet.setDefaultColumnWidth((short) 24);
+    // シートの表示拡大率の設定を行う
+    _sheet.setZoom(90);
 
     OpeSheet _opeSheet = new OpeSheet(_sheet, this.styleMap);
     this.sheetMap.put(sheetName, _opeSheet);
